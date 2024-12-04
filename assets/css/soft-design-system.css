@@ -21898,12 +21898,13 @@ label,
 }
 
 svg.text-primary .color-foreground {
-  fill: #7928CA;
+  fill: #2b653c;
 }
 
 svg.text-primary .color-background {
   fill: #2b653c;
 }
+
 
 svg.text-secondary .color-foreground {
   fill: #627594;
