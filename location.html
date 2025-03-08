@@ -20,6 +20,10 @@
   <!-- CSS Files -->
   <link id="pagestyle" href="./assets/css/soft-design-system.css?v=1.0.9" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css?family=M+PLUS+Rounded+1c" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Jua&family=Nanum+Gothic+Coding&display=swap"
+    rel="stylesheet">
 </head>
 
 <body class="index-page">
@@ -31,10 +35,10 @@
           class="navbar navbar-expand-lg  blur blur-rounded top-0 z-index-fixed shadow position-absolute my-3 py-2 start-0 end-0 mx-4">
           <div class="container-fluid px-0">
             <img src="assets/img/main/kwangjin_logo.png"
-              style="width: 30px; margin-bottom: 0.15rem; margin-left: 0.1rem;">
+              style="width: 2.5rem; margin-bottom: 0.15rem; margin-left: 0.1rem;">
             <a class="navbar-brand font-weight-bolder ms-sm-3" href="http://kwangjin.tech/index.html" rel="tooltip"
               title="Designed and Coded by Creative Tim" data-placement="bottom"
-              style="font-size: 1.1rem; padding: 0; letter-spacing: 3px; font-family: 'M PLUS Rounded 1c';">
+              style="font-size: 1.7rem; padding: 0; letter-spacing: 3px; padding-top: 0.2rem;">
               광진기업
             </a>
             <button class="navbar-toggler shadow-none ms-2" type="button" data-bs-toggle="collapse"
@@ -47,7 +51,7 @@
               </span>
             </button>
             <div class="collapse navbar-collapse pt-3 pb-2 py-lg-0 w-100" id="navigation">
-              <ul class="navbar-nav navbar-nav-hover w-100">
+              <ul class="navbar-nav navbar-nav-hover w-100 pt-1">
                 <li class="nav-item dropdown dropdown-hover mx-2">
                   <a class="nav-link ps-2 d-flex justify-content-between cursor-pointer align-items-center"
                     href="javascript:;" id="dropdownMenuPages" data-bs-toggle="dropdown" aria-expanded="false">
@@ -320,9 +324,9 @@
                 </svg>
               </div>
             </div>
-            <div class="page-header min-vh-65" style="display:grid; padding-top: 20px;">
-              <div class="map-container">
-                <div id="map"></div>
+            <div class="page-header min-vh-65" style="display:grid; padding: 3rem;">
+              <div class="container">
+                <div class="map-container" id="map"></div>
               </div>
             </div>
           </div>
@@ -360,7 +364,7 @@
           <div style="text-align: center; color: #777777;">
             <div style="color: #777777;">
               <h4><strong style="color: #ffffff;">업무시간</strong></h4>
-              업무시간 매일 08:00 ~ 17:30<br>
+              업무시간 평일 08:00 ~ 17:30<br>
               2주, 4주 토요일 근무<br>
             </div>
           </div>
@@ -407,8 +411,7 @@
   <!-- Control Center for Soft UI Kit: parallax effects, scripts for the example pages etc -->
   <!--  Google Maps Plugin    -->
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDTTfWur0PDbZWPr7Pmq8K3jiDp0_xUziI"></script>
-  <script type="text/javascript"
-    src="https://oapi.map.naver.com/openapi/v3/maps.js?ncpClientId=YOUR_CLIENT_ID"></script>
+  <script type="text/javascript" src="https://oapi.map.naver.com/openapi/v3/maps.js?ncpClientId=if3h3s6ad7"></script>
   <script src="./assets/js/soft-design-system.min.js?v=1.0.9" type="text/javascript"></script>
   <script type="text/javascript">
 
@@ -436,73 +439,96 @@
         console.error(countUp2.error);
       };
     }
-    var mapOptions = {
-      center: new naver.maps.LatLng(37.3595704, 127.105399),
-      zoom: 10
-    };
+    var mapDiv = document.getElementById('map');
+    var map = new naver.maps.Map('map', {
+      center: new naver.maps.LatLng(35.34453571125587, 127.00946055064855), //지도의 초기 중심 좌표
+      zoom: 18, //지도의 초기 줌 레벨
+      minZoom: 7, //지도의 최소 줌 레벨
+      zoomControl: true, //줌 컨트롤의 표시 여부
+      zoomControlOptions: { //줌 컨트롤의 옵션
+        position: naver.maps.Position.TOP_RIGHT
+      }
+    });
 
-    var map = new naver.maps.Map('map', mapOptions);
+    var marker = new naver.maps.Marker({
+      position: new naver.maps.LatLng(35.34453571125587, 127.00946055064855),
+      map: map
+    });
+
+
+    var contentString = [
+      '<div class="custom-infowindow">',
+      '   <h3>광진기업</h3>',
+      '   <p>전남 담양군 담양읍 에코산단3로 44</p>',
+      '   <p>유리온실 전문기업 &gt; 기업</p>',
+      '   <a href="http://kwangjin.tech/" target="_blank">🔗 공식 웹사이트 방문</a>',
+      '</div>'
+    ].join('');
+
+    var infowindow = new naver.maps.InfoWindow({
+      content: contentString,
+      disableAnchor: true, // 기본 말풍선 삼각형 제거
+    });
+
+    naver.maps.Event.addListener(marker, "click", function (e) {
+      if (infowindow.getMap()) {
+        infowindow.close();
+      } else {
+        infowindow.open(map, marker);
+      }
+    });
+
+    infowindow.open(map, marker);
+
+
+
   </script>
   <style>
 
   </style>
   <style>
-    h2 {
-      color: #2b653c;
-      /* border-bottom: 2px solid #2b653c; */
+    /* 말풍선 스타일 */
+    .custom-infowindow {
+      background: white;
+      /* border: 2px solid #4CAF50; */
+      /* 초록색 테두리 */
+      border-radius: 10px;
+      padding: 10px;
+      /* box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2); */
+      font-family: 'Arial', sans-serif;
+      max-width: 250px;
+    }
+
+    /* 제목 스타일 */
+    .custom-infowindow h3 {
+      margin: 0;
+      font-size: 16px;
+      color: #333;
+      border-bottom: 1px solid #ddd;
       padding-bottom: 5px;
-      margin-bottom: 15px;
     }
 
-    .info-section {
-      margin-bottom: 20px;
-    }
-
-    .info-section h3 {
-      color: #458a57;
-      margin-bottom: 10px;
-    }
-
-    .info-section p {
+    /* 내용 스타일 */
+    .custom-infowindow p {
       margin: 5px 0;
+      font-size: 14px;
+      color: #555;
     }
 
-    .contact-box {
-      background: #eef5ee;
-      padding: 15px;
-      border-radius: 5px;
-    }
-
-    .email a {
-      color: #2b653c;
+    /* 링크 스타일 */
+    .custom-infowindow a {
+      color: #007BFF;
       text-decoration: none;
       font-weight: bold;
     }
 
-    .email a:hover {
+    .custom-infowindow a:hover {
       text-decoration: underline;
     }
 
-    h3 {
-      color: #458a57;
-      margin-top: 20px;
-    }
-
-    h4 {
-      color: #458a57;
-      margin-top: 20px;
-    }
-
-    p {
-      margin: 10px 0;
-    }
-
-    ul {
-      padding-left: 20px;
-    }
-
-    li {
-      margin-bottom: 8px;
+    body {
+      font-family: "Do Hyeon", sans-serif;
+      font-optical-sizing: auto;
     }
 
     .text-color {
@@ -525,6 +551,11 @@
       }
     }
 
+    .container {
+      height: 100%;
+
+    }
+
     .map-container {
       width: 100%;
       max-width: 800px;
@@ -540,7 +571,9 @@
       box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
       /* 그림자 효과 */
       position: relative;
+      margin-bottom: 2rem;
     }
+
 
     #map {
       width: 100%;
